@@ -32,6 +32,37 @@ If there are other good options out there I've missed, please let me
 know!
 
 
+Example
+=======
+
+::
+
+    hosts:
+      web01: 172.21.3.4
+      web02: 172.21.3.5
+      db01: 172.21.4.2
+
+    groups:
+     - web
+    users:
+      james:
+        authorized_keys:
+          - ssh-rsa AAAA....
+          - ssh-rsa AAAAAAA.....
+        group: web
+    sudoers:
+     - james
+
+    services:
+     - memcached
+     - supervisord
+
+    files:
+      /etc/ssh/sshd_config: ssh/sshd_config
+      /
+
+
+
 .. _Fabric: http://fabfile.org/
 .. _Puppet: http://puppetlabs.com/
 .. _Chef: http://www.opscode.com/chef/
