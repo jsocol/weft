@@ -24,5 +24,9 @@ class BaseGroupProvider(object):
         raise NotImplementedError
 
     @classmethod
+    def exists(cls, group):
+        raise NotImplementedError
+
+    @classmethod
     def remove(cls, group):
         raise NotImplementedError

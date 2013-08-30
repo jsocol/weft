@@ -2,7 +2,7 @@ import os
 from cStringIO import StringIO
 from weft import exceptions
 from weft._fab import sudo, put
-from weft.providers.base.users import BaseUserProvider
+from weft.providers.base.users import BaseUserProvider, BaseGroupProvider
 
 
 AUTHORIZED_KEYS_TEMPLATE = """#
@@ -20,9 +20,14 @@ class UserProvider(BaseUserProvider):
             nohome, shell):
         cmd = ['useradd']
         if group is not None:
-            # TODO throw ConsistencyError if group does not exist.
+            if not GroupProvider.exists(group):
+                GroupProvider.add(group)
             cmd += ['-g', group]
         if groups:
+            if groups is not None:
+                for g in groups:
+                    if not GroupProvider.exists(group):
+                        GroupProvider.add(group)
             cmd += ['-G', ','.join(groups)]
         if homedir:
             cmd += ['-d', homedir]
@@ -75,3 +80,21 @@ class UserProvider(BaseUserProvider):
             cmd += ['-f', '-r']
         cmd += [username]
         return sudolist(cmd).succeeded
+
+
+class GroupProvider(BaseGroupProvider):
+    @classmethod
+    def add(cls, group):
+        if not cls.exists(group):
+            return sudolist(['groupadd', group])
+        return False
+
+    @classmethod
+    def exists(cls, group):
+        return sudolist(['groupmems', '-g', group]).succeeded
+
+    @classmethod
+    def remove(cls, group):
+        if cls.exists(group):
+            return sudolist(['groupdel', group])
+        return False
