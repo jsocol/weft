@@ -1,4 +1,4 @@
-from weft.providers.default.users import UserProvider
+from weft.providers.default.users import UserProvider, GroupProvider
 
 
 class User(object):
@@ -7,7 +7,7 @@ class User(object):
     default_provider = UserProvider
 
     @classmethod
-    def from_dict(cls, username, options):
+    def from_python(cls, username, options):
         return cls(username, **options)
 
     def __init__(self, username, group=None, groups=None, authorized_keys=None,
@@ -31,4 +31,27 @@ class User(object):
     def remove(self):
         if self.default_provider.exists(self.username):
             return self.default_provider.remove(self.username)
+        return False
+
+
+class Group(object):
+    root_key = 'groups'
+    uses_key = False
+    default_provider = GroupProvider
+
+    @classmethod
+    def from_python(cls, options):
+        return cls(options)
+
+    def __init__(self, name):
+        self.name = name
+
+    def add(self):
+        if not self.default_provider.exists(self.name):
+            return self.default_provider.add(self.name)
+        return False
+
+    def remove(self):
+        if self.default_provider.exists(self.name):
+            return self.default_provider.remove(self.name)
         return False
