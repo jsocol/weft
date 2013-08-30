@@ -103,6 +103,26 @@ Configuration
       /etc/sysctl.conf: etc/sysctl.conf
 
 
+Concepts
+========
+
+Roles
+-----
+
+While weft is certainly helpful for synchronizing the state of a single
+host, it's more useful to apply state (e.g. adding an SSH key or
+installing new nginx configs) to a set of hosts.
+
+Weft allows specifying **roles**, much like Fabric_. Roles group
+together sets of hosts, but they also group together sets of state
+definitions. 
+
+When synchronizing or adding a role, weft will take the union of all the
+roles that apply to a host. When removing a role, weft will take the
+union of all remaining roles and remove, stop, or undo anything in the
+complement.
+
+
 .. _Fabric: http://fabfile.org/
 .. _Puppet: http://puppetlabs.com/
 .. _Chef: http://www.opscode.com/chef/
