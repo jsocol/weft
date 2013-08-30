@@ -35,6 +35,34 @@ know!
 Example
 =======
 
+
+Use
+---
+
+You have a new VM somewhere, like EC2 or Rackspace. It has whatever
+standard distribution. It's on, sshd is running, and you can log in as
+root, but that's it. What now?
+
+::
+
+    $ weft sync -H weft.example.com --initial
+    root password: 
+    hostname [weft]: 
+    public_ip [12.34.56.78]: 
+    private_ip []: 172.16.12.34
+    ...
+    All done! Reboot? [Yn] Y
+    $
+
+All of the variables come from writing things like ``%{HOSTNAME:host}``
+in your configuration files, and weft will do its best to guess
+defaults. These will only be requested with the ``--initial`` flag,
+otherwise they'll be remembered remotely.
+
+
+Configuration
+-------------
+
 ::
 
     hosts:
@@ -44,23 +72,35 @@ Example
 
     groups:
      - web
+
     users:
       james:
         authorized_keys:
           - ssh-rsa AAAA....
           - ssh-rsa AAAAAAA.....
         group: web
+
     sudoers:
      - james
+
+    packages:
+     - supervisor
+     - memcached
+     - gcc
 
     services:
      - memcached
      - supervisord
 
-    files:
-      /etc/ssh/sshd_config: ssh/sshd_config
-      /
+    directories:
+      /opt/web:
+        user: nobody
+        group: web
+        permissions: 0775
 
+    files:
+      /etc/ssh/sshd_config: etc/ssh/sshd_config
+      /etc/sysctl.conf: etc/sysctl.conf
 
 
 .. _Fabric: http://fabfile.org/
