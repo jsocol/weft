@@ -18,6 +18,6 @@ class BaseCommand(object):
         for (args, kwargs) in cls.command_options:
             parser.add_argument(*args, **kwargs)
 
-    def handle(self, *args, **options):
+    def handle(self, **options):
         """Subclasses must implement this method."""
         raise NotImplementedError
