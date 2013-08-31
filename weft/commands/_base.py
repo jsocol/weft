@@ -10,14 +10,14 @@ class BaseCommand(object):
     command_options = ()
     help = ''
 
-    @classmethod
-    def get_arguments(cls, subparsers):
-        if cls.command is None:
-            _, _, cls.command = cls.__module__.rpartition('.')
-        parser = subparsers.add_parser(cls.command, help=cls.help)
-        for (args, kwargs) in cls.command_options:
+    def get_arguments(self, subparsers):
+        if self.command is None:
+            _, _, self.command = self.__module__.rpartition('.')
+        parser = subparsers.add_parser(self.command, help=self.help)
+        for (args, kwargs) in self.command_options:
             parser.add_argument(*args, **kwargs)
+            parser.set_defaults(func=self.handle)
 
-    def handle(self, **options):
+    def handle(self, options):
         """Subclasses must implement this method."""
         raise NotImplementedError
