@@ -1,5 +1,6 @@
 import os
 from cStringIO import StringIO
+from fabric.api import env
 from weft import exceptions
 from weft._fab import sudo, put
 from weft.providers.base.users import BaseUserProvider, BaseGroupProvider

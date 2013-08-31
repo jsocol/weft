@@ -1,10 +1,16 @@
 import argparse
 import os
+from fabric.api import env, execute
+from fabric.context_managers import settings
 from importlib import import_module
 
 
 def build_parser():
     parser = argparse.ArgumentParser('weft')
+    parser.add_argument('-v', '--verbosity', action='store', dest='verbosity',
+                        type=int, default=1)
+    parser.add_argument('-H', '--hosts', action='store', dest='hosts', type=str,
+                        default='')
     return parser
 
 
@@ -27,9 +33,14 @@ def main():
     subparsers = parser.add_subparsers()
     [c.get_arguments(subparsers) for c in commands]
     options = parser.parse_args()
+
+    arg_hosts = [h.strip() for h in options.hosts.split(',')]
+
     if getattr(options, 'func'):
-        return options.func(options)
-    return parser.print_help()
+        args = [options.func, options]
+        execute(options.func,
+                hosts=arg_hosts,
+                *args)
 
 
 if __name__ == '__main__':

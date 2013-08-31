@@ -1,4 +1,5 @@
 import argparse
+from fabric.api import task
 
 
 def make_option(*args, **kwargs):
@@ -16,7 +17,11 @@ class BaseCommand(object):
         parser = subparsers.add_parser(self.command, help=self.help)
         for (args, kwargs) in self.command_options:
             parser.add_argument(*args, **kwargs)
-            parser.set_defaults(func=self.handle)
+            parser.set_defaults(func=self._handle)
+
+    @task
+    def _handle(self, options):
+        self.handle(options)
 
     def handle(self, options):
         """Subclasses must implement this method."""

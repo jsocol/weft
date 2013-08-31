@@ -1,5 +1,6 @@
 import os
 import yaml
+from fabric.api import env
 from importlib import import_module
 from weft.commands._base import make_option, BaseCommand
 from weft.entities._base import BaseEntity
@@ -9,6 +10,8 @@ class Command(BaseCommand):
     command_options = (
         make_option('config', action='store',
                     help='Config file to sync to remote system.'),
+        make_option('--initial', action='store_true', dest='initial',
+                    default=False),
     )
     help = 'Synchronize remote state with configuration.'
 
@@ -42,10 +45,14 @@ class Command(BaseCommand):
         return entities
 
     def handle(self, options):
+        print env
+        if options.initial:
+            env.user = 'root'
         config = self.parse_config_file(options.config)
         for entity_cls in self.load_entity_classes():
             if entity_cls.root_key in config:
                 entities = self.build_entities(entity_cls,
                                                config[entity_cls.root_key])
                 for e in entities:
+                    print 'syncing', e
                     e.sync()
