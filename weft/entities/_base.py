@@ -1,0 +1,2 @@
+class BaseEntity(object):
+    pass

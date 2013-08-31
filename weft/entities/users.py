@@ -1,7 +1,8 @@
 from weft.providers.default.users import UserProvider, GroupProvider
+from ._base import BaseEntity
 
 
-class User(object):
+class User(BaseEntity):
     root_key = 'users'
     uses_key = True
     default_provider = UserProvider
@@ -33,8 +34,11 @@ class User(object):
             return self.default_provider.remove(self.username)
         return False
 
+    def sync(self):
+        self.add()
 
-class Group(object):
+
+class Group(BaseEntity):
     root_key = 'groups'
     uses_key = False
     default_provider = GroupProvider
@@ -55,3 +59,6 @@ class Group(object):
         if self.default_provider.exists(self.name):
             return self.default_provider.remove(self.name)
         return False
+
+    def sync(self):
+        self.add()
