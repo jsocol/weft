@@ -2,6 +2,12 @@
 weft
 ====
 
+**weft is deprecated + never worked anyway**
+
+weft was a project I was eager to start but never really got anywhere.
+This repository has been archived but it's public in case anyone wants
+to critique(/learn from) my years-old non-functional code.
+
 **weft** is a configuration manager for provisioning remote systems. It
 is powered by Fabric_ and is designed based on four primary guiding
 principles:
